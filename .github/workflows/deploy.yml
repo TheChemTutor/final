@@ -1,0 +1,40 @@
+# .github/workflows/deploy.yml
+# Deploys the portfolio to Vercel on every push to main.
+# The api/contact.js serverless function deploys automatically
+# alongside the frontend — no separate step needed.
+#
+# Required GitHub repo secrets (Settings → Secrets and variables → Actions):
+#   VERCEL_TOKEN    — from vercel.com → Account Settings → Tokens → Create
+#   VERCEL_ORG_ID   — from .vercel/project.json after running `vercel link`
+#   VERCEL_PROJECT_ID — from .vercel/project.json after running `vercel link`
+#
+# Environment variables (RESEND_API_KEY, TO_EMAIL, FROM_EMAIL, ALLOWED_ORIGIN)
+# are set in the Vercel dashboard — NOT here. They never touch GitHub secrets.
+
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy to Vercel
+        run: npx vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID:     ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

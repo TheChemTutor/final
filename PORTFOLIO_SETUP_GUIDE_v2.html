@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio Update Guide v2 — Sean T. Kuwali</title>
+<style>
+  :root {
+    --amber:#ff8800; --violet:#aa00ff; --lavender:#cc77ff;
+    --bg:#060309; --surface:#0c0512; --surface2:#130a1c;
+    --border:#260d38; --text:#f2e8f8; --muted:#7a5890; --dim:#2e1540;
+    --mono:'Courier New',monospace; --sans:system-ui,sans-serif;
+    --green:#00ff88; --red:#ff4444; --blue:#00aaff; --gold:#ffcc00;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;padding:0}
+  body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,rgba(170,0,255,0.04) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;z-index:0}
+
+  /* HEADER */
+  .doc-header{background:linear-gradient(135deg,var(--surface),var(--surface2));border-bottom:2px solid var(--border);padding:3rem 4rem;position:relative;z-index:1;overflow:hidden}
+  .doc-header::after{content:'v2';position:absolute;right:-0.02em;bottom:-0.2em;font-size:22vw;font-weight:900;color:transparent;-webkit-text-stroke:1px rgba(170,0,255,0.06);line-height:0.85;pointer-events:none;font-family:var(--mono)}
+  .doc-header h1{font-size:2.8rem;font-weight:900;letter-spacing:0.04em;margin-bottom:0.5rem;position:relative}
+  .doc-header h1 span{color:var(--amber)}
+  .doc-header p{color:var(--muted);font-size:0.95rem;font-family:var(--mono);position:relative}
+  .version-row{display:flex;gap:0.8rem;margin-top:1rem;flex-wrap:wrap;position:relative}
+
+  /* Change summary banner */
+  .changes-banner{background:rgba(170,0,255,0.08);border:1px solid rgba(170,0,255,0.3);border-left:4px solid var(--violet);padding:1.2rem 1.5rem;margin-top:1.5rem;position:relative}
+  .changes-banner .banner-title{color:var(--lavender);font-family:var(--mono);font-size:0.78rem;font-weight:bold;margin-bottom:0.7rem;text-transform:uppercase;letter-spacing:0.12em}
+  .changes-list{list-style:none;display:flex;flex-direction:column;gap:0.35rem}
+  .changes-list li{font-family:var(--mono);font-size:0.8rem;color:var(--muted)}
+  .changes-list li::before{content:'+ ';color:var(--green)}
+  .changes-list li span{color:var(--text)}
+
+  /* NAV */
+  .toc{position:sticky;top:0;z-index:100;background:rgba(6,3,9,0.97);border-bottom:2px solid var(--border);padding:0.7rem 4rem;display:flex;gap:1.5rem;overflow-x:auto;scrollbar-width:none;backdrop-filter:blur(8px)}
+  .toc::-webkit-scrollbar{display:none}
+  .toc a{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;transition:color 0.15s}
+  .toc a:hover{color:var(--amber)}
+  .toc .toc-sep{color:var(--dim);flex-shrink:0}
+
+  /* MAIN */
+  main{max-width:960px;margin:0 auto;padding:3rem 2rem 6rem;position:relative;z-index:1}
+
+  /* SECTIONS */
+  .doc-section{margin-bottom:3.5rem;border-left:2px solid var(--border);padding-left:2rem}
+  .doc-section.amber{border-left-color:var(--amber)}
+  .doc-section.violet{border-left-color:var(--violet)}
+  .doc-section.green{border-left-color:var(--green)}
+  .doc-section.blue{border-left-color:var(--blue)}
+  .doc-section.red{border-left-color:var(--red)}
+  .doc-section.gold{border-left-color:var(--gold)}
+
+  h2{font-size:1.8rem;font-weight:900;margin-bottom:1.2rem;color:var(--text)}
+  h2 .num{color:var(--amber);font-family:var(--mono);font-size:1.1rem;margin-right:0.7rem;opacity:0.7}
+  h3{font-size:1.05rem;font-weight:700;color:var(--lavender);margin:1.6rem 0 0.6rem;font-family:var(--mono);letter-spacing:0.05em}
+  h3.green{color:var(--green)}
+  h3.red{color:#ff9999}
+  p{color:var(--muted);margin-bottom:0.9rem;font-size:0.95rem}
+  p strong{color:var(--text)}
+  ul,ol{padding-left:1.3rem;margin-bottom:1rem}
+  li{color:var(--muted);font-size:0.93rem;margin-bottom:0.4rem;line-height:1.6}
+  li strong{color:var(--text)}
+  code{font-family:var(--mono);font-size:0.82rem;background:var(--surface2);border:1px solid var(--border);padding:0.1rem 0.4rem;color:#e0d8a0}
+  a{color:var(--amber);text-decoration:none}
+  a:hover{color:var(--lavender)}
+
+  /* CODE BLOCKS */
+  .cmd{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--amber);padding:1rem 1.3rem;font-family:var(--mono);font-size:0.83rem;color:#e0d8a0;margin:0.8rem 0;overflow-x:auto;white-space:pre;position:relative}
+  .cmd .comment{color:var(--dim);font-style:italic}
+  .cmd.violet{border-left-color:var(--violet)}
+  .cmd.green{border-left-color:var(--green)}
+  .cmd.blue{border-left-color:var(--blue)}
+  .cmd.red{border-left-color:var(--red)}
+  .cmd.gold{border-left-color:var(--gold);color:#ffe899}
+  .cmd-label{font-family:var(--mono);font-size:0.62rem;color:var(--amber);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.3rem;margin-top:1rem}
+  .cmd-label.violet{color:var(--lavender)}
+  .cmd-label.green{color:var(--green)}
+  .cmd-label.blue{color:var(--blue)}
+  .cmd-label.gold{color:var(--gold)}
+
+  /* STEP BOXES */
+  .step{display:flex;gap:1.2rem;margin-bottom:1.5rem;align-items:flex-start}
+  .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--violet));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:var(--bg);flex-shrink:0;margin-top:0.1rem}
+  .step-num.green{background:linear-gradient(135deg,var(--green),var(--blue))}
+  .step-num.violet{background:linear-gradient(135deg,var(--violet),var(--lavender))}
+  .step-body{flex:1}
+  .step-body h4{color:var(--text);font-size:0.95rem;margin-bottom:0.3rem}
+  .step-body p{font-size:0.88rem;margin-bottom:0.4rem}
+
+  /* CALLOUTS */
+  .callout{padding:1rem 1.3rem;margin:1rem 0;font-size:0.88rem}
+  .callout.warn{background:rgba(255,136,0,0.08);border:1px solid rgba(255,136,0,0.3);color:var(--muted)}
+  .callout.warn strong{color:var(--amber)}
+  .callout.info{background:rgba(0,170,255,0.07);border:1px solid rgba(0,170,255,0.25);color:var(--muted)}
+  .callout.info strong{color:var(--blue)}
+  .callout.success{background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.25);color:var(--muted)}
+  .callout.success strong{color:var(--green)}
+  .callout.danger{background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.3);color:var(--muted)}
+  .callout.danger strong{color:#ff8888}
+
+  /* FILE TREE */
+  .tree{background:var(--surface2);border:1px solid var(--border);padding:1.2rem 1.5rem;font-family:var(--mono);font-size:0.78rem;color:var(--muted);line-height:2.1}
+  .tree .dir{color:var(--lavender)}
+  .tree .file{color:var(--text)}
+  .tree .new{color:var(--green)}
+  .tree .note{color:var(--dim);font-style:italic}
+  .tree .changed{color:var(--amber)}
+
+  /* BADGE */
+  .badge{display:inline-block;font-family:var(--mono);font-size:0.65rem;padding:0.2rem 0.6rem;text-transform:uppercase;letter-spacing:0.1em;vertical-align:middle}
+  .badge.amber{background:rgba(255,136,0,0.15);border:1px solid rgba(255,136,0,0.4);color:var(--amber)}
+  .badge.green{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--green)}
+  .badge.red{background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);color:#ff6666}
+  .badge.violet{background:rgba(170,0,255,0.12);border:1px solid rgba(170,0,255,0.35);color:var(--lavender)}
+  .badge.blue{background:rgba(0,170,255,0.1);border:1px solid rgba(0,170,255,0.3);color:var(--blue)}
+  .badge.new{background:rgba(0,255,136,0.1);border:1px solid var(--green);color:var(--green)}
+
+  /* ENV VAR TABLE */
+  .env-table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:0.8rem 0}
+  .env-table th{text-align:left;padding:0.5rem 0.9rem;font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;border-bottom:2px solid var(--border)}
+  .env-table th.amber{color:var(--amber)}
+  .env-table th.green{color:var(--green)}
+  .env-table td{padding:0.55rem 0.9rem;border-bottom:1px solid var(--border);vertical-align:top}
+  .env-table .var{font-family:var(--mono);font-size:0.78rem;color:#e0d8a0}
+  .env-table .val{font-family:var(--mono);font-size:0.75rem;color:#88ffcc}
+  .env-table .desc{color:var(--muted);font-size:0.82rem}
+
+  /* TWO-PART ARCHITECTURE DIAGRAM */
+  .arch{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1rem 0}
+  .arch-box{background:var(--surface2);border:1px solid var(--border);padding:1.1rem 1.3rem;position:relative}
+  .arch-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .arch-box.amber::before{background:linear-gradient(90deg,var(--amber),var(--violet))}
+  .arch-box.green::before{background:linear-gradient(90deg,var(--green),var(--blue))}
+  .arch-box-title{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+  .arch-box-name{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.3rem}
+  .arch-box-detail{font-family:var(--mono);font-size:0.72rem;color:var(--muted)}
+
+  hr.divider{border:none;border-top:1px solid var(--border);margin:2rem 0}
+  footer{text-align:center;padding:2rem;font-family:var(--mono);font-size:0.7rem;color:var(--dim);border-top:2px solid var(--border)}
+
+  @media(max-width:700px){
+    .doc-header{padding:2rem 1.5rem}
+    .toc{padding:0.7rem 1.5rem}
+    main{padding:2rem 1.2rem 5rem}
+    .doc-section{padding-left:1.2rem}
+    .arch{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <h1>Portfolio <span>Setup</span> Guide <span style="color:var(--lavender);font-size:1.8rem">v2</span></h1>
+  <p>Sean Takunda Kuwali · React + Vite · Vercel</p>
+  <div class="version-row">
+    <span class="badge amber">Molten Circuit v2</span>
+    <span class="badge green">Vercel Edition</span>
+    <span class="badge violet">Simplest Setup · Everything in One Place</span>
+  </div>
+  <div class="changes-banner" style="margin-top:1.2rem">
+    <div class="banner-title">Why Vercel is the cleanest option</div>
+    <ul class="changes-list">
+      <li><span>One platform</span> — frontend and contact API deploy together from the same repo in one step.</li>
+      <li><span>No sub-path</span> — Vercel serves from root (<code>/</code>), no <code>base: '/portfolio/'</code> confusion.</li>
+      <li><span>No separate server</span> — <code>api/contact.js</code> is auto-detected and served at <code>/api/contact</code>.</li>
+      <li><span>One secrets location</span> — all env vars in the Vercel dashboard. No Cloudflare account, no wrangler.</li>
+      <li><span>SPA routing works out of the box</span> — no 404.html hack needed.</li>
+    </ul>
+  </div>
+</div>
+
+<nav class="toc">
+  <a href="#overview">Overview</a><span class="toc-sep">·</span>
+  <a href="#resend">Resend</a><span class="toc-sep">·</span>
+  <a href="#deploy">Vercel Deploy</a><span class="toc-sep">·</span>
+  <a href="#env-vars">Env Variables</a><span class="toc-sep">·</span>
+  <a href="#github-actions">GitHub Actions</a><span class="toc-sep">·</span>
+  <a href="#local-dev">Local Dev</a><span class="toc-sep">·</span>
+  <a href="#trouble">Troubleshooting</a>
+</nav>
+
+<main>
+
+<!-- ══ SECTION 01 — OVERVIEW ══ -->
+<section class="doc-section amber" id="overview">
+  <h2><span class="num">01</span>Architecture Overview</h2>
+
+  <div class="arch">
+    <div class="arch-box amber">
+      <div class="arch-box-title">Frontend + API</div>
+      <div class="arch-box-name">Vercel</div>
+      <div class="arch-box-detail">Vite + React → <code>dist/</code><br><code>api/contact.js</code> → serverless function<br>Both deploy together · free tier</div>
+    </div>
+    <div class="arch-box green">
+      <div class="arch-box-title">Email Delivery</div>
+      <div class="arch-box-name">Resend API</div>
+      <div class="arch-box-detail">Called by <code>api/contact.js</code><br>API key stored in Vercel env vars<br>Never exposed to the browser</div>
+    </div>
+  </div>
+
+  <p>When a visitor submits the contact form, the browser POSTs to <code>/api/contact</code>. Vercel automatically routes that to <code>api/contact.js</code>. The function reads <code>RESEND_API_KEY</code> from Vercel's secure environment and calls the Resend API. <strong>No external server, no separate deployment.</strong></p>
+
+  <h3>Project structure</h3>
+  <div class="tree">
+<span class="dir">portfolio2-vercel/</span>
+├── <span class="dir new">api/</span>
+│   └── <span class="file new">contact.js</span>               <span class="note">← Vercel serverless function (the contact API)</span>
+├── <span class="file new">vercel.json</span>                  <span class="note">← build config + SPA rewrite rule</span>
+├── <span class="file changed">vite.config.js</span>           <span class="note">← base: '/', dev proxy → port 3000</span>
+├── <span class="file changed">.env.example</span>             <span class="note">← server-side vars only, never in browser</span>
+├── <span class="file changed">package.json</span>             <span class="note">← vercel CLI added as devDependency</span>
+├── <span class="dir">src/</span>
+│   └── <span class="dir">components/</span>
+│       └── <span class="file changed">Contact.jsx</span>      <span class="note">← API_BASE = '' (same-origin, no env var)</span>
+└── <span class="dir">.github/workflows/</span>
+    └── <span class="file changed">deploy.yml</span>           <span class="note">← deploys to Vercel via CLI</span>
+  </div>
+</section>
+
+<!-- ══ SECTION 02 — RESEND ══ -->
+<section class="doc-section violet" id="resend">
+  <h2><span class="num">02</span>Set Up Resend</h2>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Create a Resend account</h4>
+      <p>Go to <a href="https://resend.com" target="_blank">resend.com</a> and sign up for free.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Create an API key</h4>
+      <p>Go to <strong>API Keys → Create API Key</strong>. Name: <code>portfolio-contact</code>, Permission: <strong>Sending access</strong>.</p>
+      <p>Copy the key — it starts with <code>re_</code>. You won't see it again.</p>
+      <div class="callout warn"><strong>⚠ This key goes into Vercel only.</strong> You will paste it into the Vercel dashboard in Part 3. It never goes in any file or GitHub secret.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Verify a sender domain <span class="badge amber">Recommended</span></h4>
+      <p>Go to <strong>Domains → Add Domain</strong> and follow the DNS steps for your provider. Until verified, use <code>onboarding@resend.dev</code> as <code>FROM_EMAIL</code> — Resend delivers to your Resend account email only in this mode, which is fine for confirming everything works.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 03 — DEPLOY ══ -->
+<section class="doc-section green" id="deploy">
+  <h2><span class="num">03</span>Deploy to Vercel</h2>
+
+  <h3 class="green">Option A — Vercel Dashboard (Easiest — no CLI needed)</h3>
+
+  <div class="step">
+    <div class="step-num step-num green">1</div>
+    <div class="step-body">
+      <h4>Create a Vercel account</h4>
+      <p>Go to <a href="https://vercel.com" target="_blank">vercel.com</a> and click <strong>Continue with GitHub</strong>. This lets Vercel watch your repo and redeploy automatically on every push.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num step-num green">2</div>
+    <div class="step-body">
+      <h4>Import your repo</h4>
+      <p>In the Vercel dashboard click <strong>Add New → Project → Import Git Repository</strong>. Select your portfolio repo.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num step-num green">3</div>
+    <div class="step-body">
+      <h4>Confirm build settings</h4>
+      <p>Vercel auto-detects Vite. Confirm these match and click <strong>Deploy</strong>:</p>
+      <table class="env-table">
+        <tr><th class="amber">Setting</th><th class="green">Value</th></tr>
+        <tr><td class="var">Framework Preset</td><td class="val">Vite</td></tr>
+        <tr><td class="var">Build Command</td><td class="val">npm run build</td></tr>
+        <tr><td class="var">Output Directory</td><td class="val">dist</td></tr>
+      </table>
+      <p>Your site and the contact API deploy together in ~30 seconds.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num step-num green">4</div>
+    <div class="step-body">
+      <h4>Set environment variables <span class="badge new">Required for contact form</span></h4>
+      <p>After the first deploy, go to <strong>Project → Settings → Environment Variables</strong>. Set <strong>Environment</strong> to <code>Production, Preview, Development</code> for all of them:</p>
+      <table class="env-table">
+        <tr><th class="amber">Key</th><th class="green">Value</th><th>Notes</th></tr>
+        <tr>
+          <td class="var">RESEND_API_KEY</td>
+          <td class="val">re_BccQuSUN_...</td>
+          <td class="desc">Your full Resend key from Section 02</td>
+        </tr>
+        <tr>
+          <td class="var">TO_EMAIL</td>
+          <td class="val">kuwalisean5@gmail.com</td>
+          <td class="desc">Inbox that receives portfolio messages</td>
+        </tr>
+        <tr>
+          <td class="var">FROM_EMAIL</td>
+          <td class="val">portfolio@yourdomain.com</td>
+          <td class="desc">Verified Resend sender (or onboarding@resend.dev for testing)</td>
+        </tr>
+        <tr>
+          <td class="var">ALLOWED_ORIGIN</td>
+          <td class="val">https://yoursite.vercel.app</td>
+          <td class="desc">Your Vercel site URL — restricts which origins the function accepts</td>
+        </tr>
+      </table>
+      <div class="callout success"><strong>✓ These are server-side only.</strong> Vercel injects them into <code>api/contact.js</code> at runtime. They are never bundled into the browser build or visible in network requests.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num step-num green">5</div>
+    <div class="step-body">
+      <h4>Redeploy</h4>
+      <p>Go to <strong>Deployments → latest deployment → ⋯ → Redeploy</strong>. This ensures the function picks up the new environment variables.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num step-num green">6</div>
+    <div class="step-body">
+      <h4>Test end-to-end</h4>
+      <p>Open your Vercel URL, fill in the contact form, submit. You should receive an email at <code>TO_EMAIL</code> within seconds. Check <strong>Project → Functions → contact → View Logs</strong> if something doesn't arrive.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 04 — ENV VARS ══ -->
+<section class="doc-section blue" id="env-vars">
+  <h2><span class="num">04</span>Environment Variables Reference</h2>
+
+  <p>All variables are <strong>server-side only</strong> — read by <code>api/contact.js</code> at runtime via <code>process.env.*</code>. None are embedded in the browser bundle.</p>
+
+  <div class="cmd-label">Local .env file (development only)</div>
+  <div class="cmd">RESEND_API_KEY=re_BccQuSUN_GjwnAJNQjGnT9ex6x1diAAUZ
+TO_EMAIL=kuwalisean5@gmail.com
+FROM_EMAIL=portfolio@yourdomain.com
+ALLOWED_ORIGIN=https://yoursite.vercel.app</div>
+
+  <div class="callout danger"><strong>⚠ Never commit .env to git.</strong> It is already listed in <code>.gitignore</code>. The committed <code>.env.example</code> has the same keys with placeholder values — safe to commit because it holds no real secrets.</div>
+
+  <h3>Where to set them in production</h3>
+  <p>Vercel dashboard → <strong>Project → Settings → Environment Variables</strong>. Set once; Vercel injects them into every function invocation automatically. No rebuild needed after changing a value — just redeploy.</p>
+</section>
+
+<!-- ══ SECTION 05 — GITHUB ACTIONS ══ -->
+<section class="doc-section gold" id="github-actions">
+  <h2><span class="num">05</span>GitHub Actions (Automated CI/CD)</h2>
+
+  <p>The included <code>.github/workflows/deploy.yml</code> deploys to Vercel automatically on every push to <code>main</code>. If you used the Vercel dashboard import in Section 03, Vercel already does this automatically — this workflow gives you more control and visibility in the GitHub Actions tab.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Link the project locally (one-time)</h4>
+      <div class="cmd">npm install
+npx vercel link
+<span class="comment"># Signs in to Vercel and links to your project.
+# Creates .vercel/project.json — do NOT commit this file.</span></div>
+      <p>Open <code>.vercel/project.json</code> and copy <code>orgId</code> and <code>projectId</code>.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Add GitHub secrets</h4>
+      <p>Go to repo → <strong>Settings → Secrets and variables → Actions → New repository secret</strong>:</p>
+      <table class="env-table">
+        <tr><th class="amber">Secret name</th><th class="green">Value</th></tr>
+        <tr><td class="var">VERCEL_TOKEN</td><td class="val">vercel.com → Account Settings → Tokens → Create</td></tr>
+        <tr><td class="var">VERCEL_ORG_ID</td><td class="val">orgId from .vercel/project.json</td></tr>
+        <tr><td class="var">VERCEL_PROJECT_ID</td><td class="val">projectId from .vercel/project.json</td></tr>
+      </table>
+      <div class="callout info"><strong>ℹ RESEND_API_KEY and email vars are NOT set here.</strong> They go in the Vercel dashboard (Section 04) where they're available at function runtime.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Push to main</h4>
+      <p>Any push to <code>main</code> triggers the workflow. Watch it in the <strong>Actions</strong> tab of your GitHub repo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 06 — LOCAL DEV ══ -->
+<section class="doc-section amber" id="local-dev">
+  <h2><span class="num">06</span>Local Development</h2>
+
+  <p>Use <code>vercel dev</code> to run both the frontend and the serverless function together locally — identical to the production environment.</p>
+
+  <div class="cmd-label green">Terminal — full stack (recommended)</div>
+  <div class="cmd green">cp .env.example .env      <span class="comment"># fill in RESEND_API_KEY, TO_EMAIL, FROM_EMAIL, ALLOWED_ORIGIN</span>
+npm install
+npm run dev:full           <span class="comment"># runs: vercel dev (port 3000)</span></div>
+
+  <p>Open <code>http://localhost:3000</code>. The contact form POSTs to <code>/api/contact</code> and the local function handles it exactly as it would in production.</p>
+
+  <div class="cmd-label">Alternative — Vite only (no function)</div>
+  <div class="cmd">npm run dev                <span class="comment"># Vite only on port 5173 — contact form will not send</span></div>
+</section>
+
+<!-- ══ SECTION 07 — TROUBLESHOOTING ══ -->
+<section class="doc-section red" id="trouble">
+  <h2><span class="num">07</span>Troubleshooting</h2>
+
+  <table class="env-table" style="font-size:0.82rem">
+    <tr>
+      <th class="amber">Symptom</th>
+      <th style="color:#ff9999">Likely cause</th>
+      <th class="green">Fix</th>
+    </tr>
+    <tr>
+      <td class="var">Contact form error on live site</td>
+      <td class="desc">Env vars not set in Vercel dashboard</td>
+      <td class="desc">Project → Settings → Environment Variables; redeploy</td>
+    </tr>
+    <tr>
+      <td class="var">Function logs: "configuration incomplete"</td>
+      <td class="desc">RESEND_API_KEY / TO_EMAIL / FROM_EMAIL missing</td>
+      <td class="desc">Add the missing variable in Vercel dashboard; redeploy</td>
+    </tr>
+    <tr>
+      <td class="var">Email not arriving</td>
+      <td class="desc">Wrong TO_EMAIL or FROM_EMAIL not verified</td>
+      <td class="desc">Check Resend dashboard → Logs</td>
+    </tr>
+    <tr>
+      <td class="var">CORS error in browser console</td>
+      <td class="desc">ALLOWED_ORIGIN doesn't match Vercel URL</td>
+      <td class="desc">Update the variable in Vercel dashboard; redeploy</td>
+    </tr>
+    <tr>
+      <td class="var">GitHub Actions deploy fails</td>
+      <td class="desc">Missing VERCEL_TOKEN / ORG_ID / PROJECT_ID secrets</td>
+      <td class="desc">Add all three in repo → Settings → Secrets → Actions</td>
+    </tr>
+    <tr>
+      <td class="var">404 on /api/contact</td>
+      <td class="desc">api/contact.js not found or build error</td>
+      <td class="desc">Check Vercel deploy logs; confirm file is at api/contact.js in project root</td>
+    </tr>
+    <tr>
+      <td class="var">White screen locally</td>
+      <td class="desc">Running npm run dev instead of vercel dev</td>
+      <td class="desc">Use npm run dev:full; or open http://localhost:3000 not 5173</td>
+    </tr>
+  </table>
+</section>
+
+</main>
+
+<footer>
+  Sean Kuwali Portfolio v2 · Vercel Edition · Generated by Claude
+</footer>
+
+</body>
+</html>

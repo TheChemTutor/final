@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#060309"/>
+  <polygon points="32,4 60,18 60,46 32,60 4,46 4,18" fill="none" stroke="#ff8800" stroke-width="2"/>
+  <polygon points="32,14 50,23 50,41 32,50 14,41 14,23" fill="none" stroke="#aa00ff" stroke-width="1.2" opacity="0.7"/>
+  <text x="32" y="37" font-family="sans-serif" font-weight="900" font-size="18" fill="#ff8800" text-anchor="middle">SK</text>
+</svg>

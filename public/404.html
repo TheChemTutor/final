@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <script>
+    // GitHub Pages SPA redirect trick — redirects back to index with hash
+    var seg = window.location.pathname.replace('/portfolio','') || '/';
+    window.location.replace('/portfolio/' + (seg === '/' ? '' : '?p=' + encodeURIComponent(seg)) + window.location.hash);
+  </script>
+</head>
+<body>Redirecting...</body>
+</html>
